@@ -1,0 +1,25 @@
+{
+  "name": "friendfinder",
+  "version": "1.0.0",
+  "description": "A simple compatability application.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngolba/FriendFinder.git"
+  },
+  "author": "Nathan Golba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ngolba/FriendFinder/issues"
+  },
+  "homepage": "https://github.com/ngolba/FriendFinder#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "path": "^0.12.7"
+  }
+}

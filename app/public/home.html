@@ -1,13 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway:300i,400');
+
+        * {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .container {
+            margin: 2em auto;
+            width: 100%;
+            max-width: 750px;
+        }
+        
+        #header {
+            text-align: center;
+            display: none;
+        }
+        #header h5 {
+            font-style: italic;
+        }
+        #homeBody {
+            text-align: center;
+            display: none;
+        }
+        #startBtn {
+            display: none;
+            background-color: rgba(10, 10, 10, 0.822);
+            color: white;
+            height: 30px;
+            width: 200px;
+            border: 2px solid rgba(10, 10, 10, 0.822);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+        #startBtn:hover {
+            background-color: white;
+            color: rgba(10, 10, 10, 0.822);
+            -webkit-transition-duration: 0.5s;
+            transition-duration: 0.5s;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Home</h1>
-    
+    <div class="container">
+
+
+        <div id='header'>
+            <h1>nihilist friend finder</h1>
+            <h3>"everything is nothing, including the counsciousness of nothing."</h3>
+            <h5>e. m. cioran</h5>
+        </div>
+        <div id='homeBody'>
+            <h3>take our survey and find your own personal nobody.</h3>
+            <button id='startBtn'>start</button>
+        </div>
+        
+
+    </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+    $(document).ready(() => {
+        $('#header').delay(300).fadeIn(1000);
+        $('#homeBody').delay(2000).fadeIn(1000);
+        $('#startBtn').delay(3000).fadeIn(500);
+    })
+    
+    $('#startBtn').click((event) => {
+        $('.container').fadeOut(500)
+        setTimeout(() => {
+            window.location = '/survey'
+            $.get('/survey', (data) => console.log('Survey started'))
+        }, 500)
+    })
+</script>
+
 </html>

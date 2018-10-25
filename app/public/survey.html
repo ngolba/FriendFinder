@@ -24,9 +24,10 @@
 <body>
     <div class="container">
         <h1>enter your basic information to begin</h1>
-        <form>
-            name: <input placeholder="your name"  name="nameFace">
-            profile picture: <input type="url" placeholder="your image url">
+        <form id='nameFace'>
+            name: <input placeholder="your name"  name="name" required><br>
+            profile picture: <input type="url" placeholder="your image url" name="profileImg">
+            <input type="submit" value="start survey" id="nameFaceSubmit">
         </form>
     </div>
 
@@ -36,11 +37,13 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 <script type="text/javascript">
-    let testing = {
-        name: 'name',
-        photo: 'photo.png',
-        scores: [0, 1, 2, 3, 4]
-    };
+
+    $('')
+    // let testing = {
+    //     name: 'name',
+    //     photo: 'photo.png',
+    //     scores: [0, 1, 2, 3, 4]
+    // };
     $('#test').click((event) => {
         $.post('/api/friends', testing).then((data) => {
             // console.log(data);

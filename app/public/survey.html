@@ -38,7 +38,7 @@
         box-shadow: 0 0 0 30px white inset;
         -webkit-box-shadow: 0 0 0 30px white inset;
         }
-        #nameFaceSubmit {
+        #nameFaceSubmit, #surveySubmit {
             display: block;
             background-color: rgba(10, 10, 10, 0.822);
             color: white;
@@ -53,7 +53,7 @@
             transition-duration: 0.5s;
             margin: 0 auto;
         }
-        #nameFaceSubmit:hover {
+        #nameFaceSubmit:hover, #surveySubmit:hover {
             background-color: white;
             color: rgba(10, 10, 10, 0.822);
         }
@@ -69,10 +69,10 @@
             width: fit-content;
             background-color: white;
             color: black;
-            border: solid 2px black;
+            border: 2px solid black;
             border-radius: 20px;
             overflow: hidden;
-            margin: 5px auto;
+            margin: 15px auto;
         }
         input[type=radio] {
             visibility: hidden;
@@ -81,19 +81,27 @@
         }
         input[type=radio]:checked  + label {
             color: white;
-            background-color: rgb(36, 36, 36);
+            background-color: rgba(10, 10, 10, 0.822);
         }
         .radioGroup label {
             display: inline-block;
             cursor: pointer;
+            border-right:  1px solid black;
             font-weight: bold;
             padding: 5px 20px;
         }
+        .radioGroup label:last-child {
+            border-right: none;
+        }
         #results {
+            text-align: center;
             display:none;
         }
         .radioBar p{
             display: inline;
+        }
+        .surveySubmitContainer {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -109,31 +117,22 @@
         <div id='questionGrid'>
             <form>
                 <h1 id="question">i get a healthy amount of sleep at night.</h1>
-                <div class="radioBar">
-                    <p>strongly disagree</p>
-                    <div class="radioGroup">
-                        <input type="radio" id="stronglyDisagree" name="0" points="1"> <label for="stronglyDisagree">1</label>
-                        <input type="radio" id="disagree" name="0" points="2"><label for="disagree">2</label>
-                        <input type="radio" id="neutral" name="0" points="3" checked><label for="neutral">3</label>
-                        <input type="radio" id="agree" name="0" points="4"><label for="agree">4</label>
-                        <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">5</label>
-                        <!-- <input type="radio" id="stronglyDisagree" name="0" points="1"> <label for="stronglyDisagree">strongly
-                        disagree</label>
-                    <input type="radio" id="disagree" name="0" points="2"><label for="disagree">disagree</label>
-                    <input type="radio" id="neutral" name="0" points="3" checked><label for="neutral">neutral</label>
-                    <input type="radio" id="agree" name="0" points="4"><label for="agree">agree</label>
-                    <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">strongly
-                        agree</label> -->
-                    </div>
-                    <p>strongly agree</p>
+                <h5>strongly disagree/disagree/neutral/agree/strongly agree</h5>
+                <div class="radioGroup">
+                    <input type="radio" id="stronglyDisagree" name="0" points="1"> <label for="stronglyDisagree">SD</label>
+                    <input type="radio" id="disagree" name="0" points="2"><label for="disagree">D</label>
+                    <input type="radio" id="neutral" name="0" points="3" checked><label for="neutral">N</label>
+                    <input type="radio" id="agree" name="0" points="4"><label for="agree">A</label>
+                    <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">SA</label>
                 </div>
-                <div>
+                <div class="surveySubmitContainer">
                     <input type="submit" id="surveySubmit" name="0" value="submit">
                 </div>
                 <progress value='0' max='10'></progress>
             </form>
         </div>
         <div id='results'>
+            <h1>your match</h1>
             <img src="#" height="300px" width="300px" id="matchImg">
             <h2 id="matchName"></h2>
         </div>

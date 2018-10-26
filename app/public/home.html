@@ -81,10 +81,7 @@
     
     $('#startBtn').click((event) => {
         $('.container').fadeOut(500)
-        setTimeout(() => {
-            window.location = '/survey'
-            $.get('/survey', (data) => console.log('Survey started'))
-        }, 500)
+        setTimeout(() => window.location = '/survey', 500)
     })
 </script>
 

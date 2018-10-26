@@ -18,17 +18,47 @@
             width: 100%;
             max-width: 750px;
         }
+        #nameFace {
+            display: none;
+        }
+        #questionGrid {
+            display: none;
+        }
+        #results {
+            display:none;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>enter your basic information to begin</h1>
         <form id='nameFace'>
-            name: <input placeholder="your name"  name="name" required><br>
-            profile picture: <input type="url" placeholder="your image url" name="profileImg">
+            <h1>enter your basic information to begin</h1>
+            name: <input id="userName" placeholder="your name" name="name" required><br>
+            profile picture: <input id="userImg" type="url" placeholder="your image url" name="photo" required>
             <input type="submit" value="start survey" id="nameFaceSubmit">
         </form>
+        <div id='questionGrid'>
+            <progress value='0' max='10'></progress>
+            <form>
+                <h1 id="question">i get a healthy amount of sleep at night.</h1>
+                <div>
+                    <input type="radio" id="stronglyDisagree" name="0" points="1"><label for="stronglyDisagree">strongly
+                        disagree</label>
+                    <input type="radio" id="disagree" name="0" points="2"><label for="disagree">disagree</label>
+                    <input type="radio" id="neutral" name="0"  points="3"checked><label for="neutral">neutral</label>
+                    <input type="radio" id="agree" name="0" points="4"><label for="agree">agree</label>
+                    <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">strongly agree</label>
+                </div>
+                <div>
+                    <input type="submit" id="surveySubmit" name="0" value="submit">
+                </div>
+            </form>
+        </div>
+        <div id='results'>
+            <img src="#" height="300px" width="300px" id="matchImg">
+            <h2 id="matchName"></h2>
+        </div>
     </div>
 
 
@@ -37,17 +67,43 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 <script type="text/javascript">
+    let responses = [];
+    let currentUser = {};
+    let currentQuestion = 0;
+    let questions = ["i get a healthy amount of sleep at night.", "i look forward to what the future may hold.", "everything is going to turn out alright." , "i look forward to each approaching day.", "sometimes I feel completely alone.", "this is really all there is.", "this is all there will ever be.", "life is a series of futile advances.", "nobody will miss me when i'm gone.", "at least this is all going to be over eventually."]
+    
+    $(document).ready(() => {
+        $('#nameFace').fadeIn(500)
+    })
+    $('#nameFace').submit((e) => {
+        currentUser.name = $('#userName').val();
+        currentUser.photo = $('#userImg').val();
+        $('#nameFace').fadeOut()
+        $('#questionGrid').delay(500).fadeIn()
+        return false
+    })
 
-    $('')
-    // let testing = {
-    //     name: 'name',
-    //     photo: 'photo.png',
-    //     scores: [0, 1, 2, 3, 4]
-    // };
-    $('#test').click((event) => {
-        $.post('/api/friends', testing).then((data) => {
-            // console.log(data);
-        })
+    $('#surveySubmit').click((e) => {
+        responses.push(Number($("input[type=radio]:checked").attr("points")))
+        currentQuestion++;
+        $('progress').attr('value', currentQuestion)
+        $('input[type=radio').each(function () {$(this).attr("name", currentQuestion)})
+        if (currentQuestion === 10) {
+            currentUser.responses = responses;
+            $('#questionGrid').fadeOut();
+            $.post('/api/friends', currentUser).done((data) => {
+                console.log(data)
+                $('#matchImg').attr('src', data.photo);
+                $('#matchName').text(data.name);
+                $('#results').fadeIn()
+            })
+        } else {
+            $('#question').fadeOut();
+        setTimeout(() => {
+            $('#question').text(questions[currentQuestion]).fadeIn()
+        },400)
+        }
+        e.preventDefault();
     })
 </script>
 

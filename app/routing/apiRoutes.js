@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const bodyParser = require('body-parser')
 const fs = require('fs')
+const cloudinary = require('cloudinary');
 const friendPath = path.join(__dirname, '../data/friends.js')
 
 let friends = []
@@ -17,6 +18,10 @@ const findMatch = (user, allUsers) => {
             .reduce((a, b) => a + b))
     return nonDuplicateUsers[matchScores.indexOf(Math.min(...matchScores))]
 }
+
+router.post('/api/imageProcessing', (req, res) => {
+
+})
 
 router.post('/api/friends', (req, res) => {
     let match = findMatch(req.body, friends);

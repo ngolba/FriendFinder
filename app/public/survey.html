@@ -18,14 +18,82 @@
             width: 100%;
             max-width: 750px;
         }
+        #nameFace h1 {
+            text-align: center;
+        }
         #nameFace {
             display: none;
         }
+        .basicInfo {
+            font-size: 16px;
+            color: black;
+            display: block;
+            text-align: center;
+            padding: 5px;
+            margin: 0 auto;
+            border: none;
+            border-bottom: 1px solid black;
+        }
+        input:-webkit-autofill {
+        box-shadow: 0 0 0 30px white inset;
+        -webkit-box-shadow: 0 0 0 30px white inset;
+        }
+        #nameFaceSubmit {
+            display: block;
+            background-color: rgba(10, 10, 10, 0.822);
+            color: white;
+            height: 30px;
+            width: 200px;
+            border: 2px solid rgba(10, 10, 10, 0.822);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            -webkit-transition-duration: 0.5s;
+            transition-duration: 0.5s;
+            margin: 0 auto;
+        }
+        #nameFaceSubmit:hover {
+            background-color: white;
+            color: rgba(10, 10, 10, 0.822);
+        }
         #questionGrid {
+            text-align: center;
             display: none;
+        }
+        progress {
+            width: 50%;
+        }
+        .radioGroup {
+            display: inline-flex;
+            width: fit-content;
+            background-color: white;
+            color: black;
+            border: solid 2px black;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 5px auto;
+        }
+        input[type=radio] {
+            visibility: hidden;
+            position: absolute;
+            display:none;
+        }
+        input[type=radio]:checked  + label {
+            color: white;
+            background-color: rgb(36, 36, 36);
+        }
+        .radioGroup label {
+            display: inline-block;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 5px 20px;
         }
         #results {
             display:none;
+        }
+        .radioBar p{
+            display: inline;
         }
     </style>
 </head>
@@ -34,25 +102,35 @@
     <div class="container">
         <form id='nameFace'>
             <h1>enter your basic information to begin</h1>
-            name: <input id="userName" placeholder="your name" name="name" required><br>
-            profile picture: <input id="userImg" type="url" placeholder="your image url" name="photo" required>
+            <input class="basicInfo" id="userName" type="text" placeholder="your name" required><br>
+            <input class="basicInfo" id="userImg" type="url" name="userImg" placeholder="image url" required><br>
             <input type="submit" value="start survey" id="nameFaceSubmit">
         </form>
         <div id='questionGrid'>
-            <progress value='0' max='10'></progress>
             <form>
                 <h1 id="question">i get a healthy amount of sleep at night.</h1>
-                <div>
-                    <input type="radio" id="stronglyDisagree" name="0" points="1"><label for="stronglyDisagree">strongly
+                <div class="radioBar">
+                    <p>strongly disagree</p>
+                    <div class="radioGroup">
+                        <input type="radio" id="stronglyDisagree" name="0" points="1"> <label for="stronglyDisagree">1</label>
+                        <input type="radio" id="disagree" name="0" points="2"><label for="disagree">2</label>
+                        <input type="radio" id="neutral" name="0" points="3" checked><label for="neutral">3</label>
+                        <input type="radio" id="agree" name="0" points="4"><label for="agree">4</label>
+                        <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">5</label>
+                        <!-- <input type="radio" id="stronglyDisagree" name="0" points="1"> <label for="stronglyDisagree">strongly
                         disagree</label>
                     <input type="radio" id="disagree" name="0" points="2"><label for="disagree">disagree</label>
-                    <input type="radio" id="neutral" name="0"  points="3"checked><label for="neutral">neutral</label>
+                    <input type="radio" id="neutral" name="0" points="3" checked><label for="neutral">neutral</label>
                     <input type="radio" id="agree" name="0" points="4"><label for="agree">agree</label>
-                    <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">strongly agree</label>
+                    <input type="radio" id="stronglyAgree" name="0" points="5"><label for="stronglyAgree">strongly
+                        agree</label> -->
+                    </div>
+                    <p>strongly agree</p>
                 </div>
                 <div>
                     <input type="submit" id="surveySubmit" name="0" value="submit">
                 </div>
+                <progress value='0' max='10'></progress>
             </form>
         </div>
         <div id='results'>
@@ -70,8 +148,13 @@
     let responses = [];
     let currentUser = {};
     let currentQuestion = 0;
-    let questions = ["i get a healthy amount of sleep at night.", "i look forward to what the future may hold.", "everything is going to turn out alright." , "i look forward to each approaching day.", "sometimes I feel completely alone.", "this is really all there is.", "this is all there will ever be.", "life is a series of futile advances.", "nobody will miss me when i'm gone.", "at least this is all going to be over eventually."]
-    
+    let questions = ["i get a healthy amount of sleep at night.", "i look forward to what the future may hold.",
+        "everything is going to turn out alright.", "i look forward to each approaching day.",
+        "sometimes I feel completely alone.", "this is really all there is.", "this is all there will ever be.",
+        "life is a series of futile advances.", "nobody will miss me when i'm gone.",
+        "at least this is all going to be over eventually."
+    ]
+
     $(document).ready(() => {
         $('#nameFace').fadeIn(500)
     })
@@ -87,7 +170,9 @@
         responses.push(Number($("input[type=radio]:checked").attr("points")))
         currentQuestion++;
         $('progress').attr('value', currentQuestion)
-        $('input[type=radio').each(function () {$(this).attr("name", currentQuestion)})
+        $('input[type=radio').each(function () {
+            $(this).attr("name", currentQuestion)
+        })
         if (currentQuestion === 10) {
             currentUser.responses = responses;
             $('#questionGrid').fadeOut();
@@ -99,9 +184,9 @@
             })
         } else {
             $('#question').fadeOut();
-        setTimeout(() => {
-            $('#question').text(questions[currentQuestion]).fadeIn()
-        },400)
+            setTimeout(() => {
+                $('#question').text(questions[currentQuestion]).fadeIn()
+            }, 400)
         }
         e.preventDefault();
     })

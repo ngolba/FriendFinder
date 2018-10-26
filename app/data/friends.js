@@ -1,1 +1,1 @@
-[{"name":"Nathan","photo":"https://via.placeholder.com/300x300.png?text=Nathan","responses":["1","4","3","3","5","5","5","4","3","4"]}]
+[{"name":"Nathan","photo":"https://ngolba.github.io/Portfolio/assets/images/headShot.png","responses":["1","4","3","3","5","5","5","4","3","4"]}]

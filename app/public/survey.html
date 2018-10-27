@@ -121,6 +121,10 @@
             <input class="basicInfo" id="userImg" type="url" name="userImg" placeholder="image url" required><br>
             <input type="submit" value="start survey" id="nameFaceSubmit">
         </form>
+        <form id="testing" enctype="multipart/form-data" action="/api/imageProcessing" method="POST">
+            <input type="file" name="userUpload">
+            <input type="submit" value="submit">
+        </form>
         <div id='questionGrid'>
             <form>
                 <h1 id="question">i get a healthy amount of sleep at night.</h1>

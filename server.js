@@ -4,6 +4,7 @@ const fs = require('fs')
 const bodyParser = require('body-parser')
 const path = require('path');
 const express = require('express');
+const favicon = require('serve-favicon')
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(favicon(path.join(__dirname, 'app', 'data', 'favicon.ico')))
 app.use('/', apiRouting);
 app.use('/', htmlRouting);
 

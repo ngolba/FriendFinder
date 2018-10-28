@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>survey</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
+        crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Raleway:300i,400');
     
@@ -24,10 +26,25 @@
         #nameFace {
             display: none;
         }
+ 
+        #nameFace h3 {
+            width: 5%;
+            display: inherit;
+        }
+        #userName {
+            display: block;
+        }
+        .imgChoices {
+            width: 100%;
+            display: inline-block;
+            text-align: center;
+        }
         .basicInfo {
+            width: 40%;
+            max-width: 200px;
+            display: inline-block;
             font-size: 16px;
             color: black;
-            display: block;
             text-align: center;
             padding: 5px;
             margin: 0 auto;
@@ -38,7 +55,7 @@
         box-shadow: 0 0 0 30px white inset;
         -webkit-box-shadow: 0 0 0 30px white inset;
         }
-        #nameFaceSubmit, #surveySubmit {
+        #uploadSubmit, #surveySubmit {
             display: block;
             background-color: rgba(10, 10, 10, 0.822);
             color: white;
@@ -53,7 +70,7 @@
             transition-duration: 0.5s;
             margin: 0 auto;
         }
-        #nameFaceSubmit:hover, #surveySubmit:hover {
+        #uploadSubmit:hover, #surveySubmit:hover {
             background-color: white;
             color: rgba(10, 10, 10, 0.822);
         }
@@ -110,21 +127,33 @@
             border: 1px solid #ddd;
             padding: 5px;
         }
+        #userUpload {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+        width: .1px;
+        height: .1px;
+        overflow: hidden;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <form id='nameFace'>
+        <form id='nameFace' enctype="multipart/form-data" action="/upload" method="POST" target="uploadFrame">
             <h1>enter your basic information to begin</h1>
-            <input class="basicInfo" id="userName" type="text" placeholder="your name" required><br>
-            <input class="basicInfo" id="userImg" type="url" name="userImg" placeholder="image url" required><br>
-            <input type="submit" value="start survey" id="nameFaceSubmit">
+            <input class="basicInfo" id="userName" type="text" placeholder="your name" name="userInfo" required><br>
+            <div class="imgChoices">
+                <input class="basicInfo" id="userImg" type="url" name="userInfo" placeholder="image url">
+                <h3>or</h3>
+                <input id="userUpload" type="file" name="userInfo" accept="image/*">
+                <label id="userUploadLabel" class="basicInfo" for="userUpload"><span id="fileName">upload</span> <i id="uploadIcon"
+                        class="fas fa-cloud-upload-alt"></i></label>
+            </div>
+            <br>
+            <input type="submit" value="submit" id="uploadSubmit">
         </form>
-        <form id="testing" enctype="multipart/form-data" action="/api/imageProcessing" method="POST">
-            <input type="file" name="userUpload">
-            <input type="submit" value="submit">
-        </form>
+        <iframe id="uploadFrame" name="uploadFrame" style="display: none"></iframe>
         <div id='questionGrid'>
             <form>
                 <h1 id="question">i get a healthy amount of sleep at night.</h1>
@@ -156,7 +185,6 @@
     crossorigin="anonymous"></script>
 <script type="text/javascript">
     let responses = [];
-    let currentUser = {};
     let currentQuestion = 0;
     let questions = ["i get a healthy amount of sleep at night.", "i look forward to what the future may hold.",
         "everything is going to turn out alright.", "i look forward to each approaching day.",
@@ -168,28 +196,31 @@
     $(document).ready(() => {
         $('#nameFace').fadeIn(500)
     })
+
     $('#nameFace').submit((e) => {
-        currentUser.name = $('#userName').val();
-        currentUser.photo = $('#userImg').val();
         $('#nameFace').fadeOut()
         $('#questionGrid').delay(500).fadeIn()
-        return false
+    })
+
+    $('#userUpload').change((e) => {
+        $('#fileName').text(($(e.currentTarget).val().split('\\').pop()))
+        $('#uploadIcon').removeClass('fa-cloud-upload-alt').addClass('fa-file-image')
     })
 
     $('#surveySubmit').click((e) => {
         responses.push(Number($("input[type=radio]:checked").attr("points")))
+        console.log(responses);
         currentQuestion++;
         $('progress').attr('value', currentQuestion)
-        $('input[type=radio').each(function () {
+        $('input[type=radio]').each(function () {
             $(this).attr("name", currentQuestion)
         })
         if (currentQuestion === 10) {
-            currentUser.responses = responses;
             $('#questionGrid').fadeOut();
-            $.post('/api/friends', currentUser).done((data) => {
-                console.log(data)
-                $('#matchImg').attr('src', data.photo);
-                $('#matchName').text(data.name);
+            $.post('/api/friends', {responses}).done((match) => {
+                console.log(match)
+                $('#matchImg').attr('src', match.image);
+                $('#matchName').text(match.name);
                 $('#results').fadeIn()
             })
         } else {

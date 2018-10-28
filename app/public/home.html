@@ -14,8 +14,15 @@
         }
         
         .container {
-            margin: 2em auto;
+            margin: auto;
+            height: fit-content;
+            min-height: 250px;
             width: 100%;
+            position:absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 20%;
             max-width: 750px;
         }
         
@@ -53,8 +60,6 @@
 
 <body>
     <div class="container">
-
-
         <div id='header'>
             <h1>nihilist friend finder</h1>
             <h3>"everything is nothing, including the counsciousness of nothing."</h3>
@@ -64,21 +69,18 @@
             <h3>take our survey and find your own personal nobody.</h3>
             <button id='startBtn'>start</button>
         </div>
-        
-
     </div>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 <script type="text/javascript">
-
     $(document).ready(() => {
         $('#header').delay(300).fadeIn(1000);
         $('#homeBody').delay(2000).fadeIn(1000);
         $('#startBtn').delay(3000).fadeIn(500);
     })
-    
+
     $('#startBtn').click((event) => {
         $('.container').fadeOut(500)
         setTimeout(() => window.location = '/survey', 500)

@@ -16,8 +16,14 @@
         }
             
         .container {
-            margin: 2em auto;
+            margin: auto;
+            height: fit-content;
             width: 100%;
+            position:absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 20%;
             max-width: 750px;
         }
         #nameFace h1 {
@@ -177,8 +183,6 @@
             <h2 id="matchName"></h2>
         </div>
     </div>
-
-
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -216,7 +220,9 @@
         })
         if (currentQuestion === 10) {
             $('#questionGrid').fadeOut();
-            $.post('/api/friends', {responses}).done((match) => {
+            $.post('/api/friends', {
+                responses
+            }).done((match) => {
                 $('#matchImg').attr('src', match.image);
                 $('#matchName').text(match.name);
                 $('#results').fadeIn()

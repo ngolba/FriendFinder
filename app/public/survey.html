@@ -209,7 +209,6 @@
 
     $('#surveySubmit').click((e) => {
         responses.push(Number($("input[type=radio]:checked").attr("points")))
-        console.log(responses);
         currentQuestion++;
         $('progress').attr('value', currentQuestion)
         $('input[type=radio]').each(function () {
@@ -218,7 +217,6 @@
         if (currentQuestion === 10) {
             $('#questionGrid').fadeOut();
             $.post('/api/friends', {responses}).done((match) => {
-                console.log(match)
                 $('#matchImg').attr('src', match.image);
                 $('#matchName').text(match.name);
                 $('#results').fadeIn()

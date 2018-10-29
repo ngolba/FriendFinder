@@ -48,8 +48,14 @@ router.post('/upload', upload.single('userInfo'), (req, res) => {
             req.session.save(()=> console.log('saved'))
             rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
         })
-    } else if (userUrl) req.session.user.image = userUrl;
-    else req.session.user.image = stockImg;
+    } else if (userUrl) {
+        req.session.user.image = userUrl;
+        req.session.save(()=> console.log('saved'))
+    }
+    else {
+        req.session.user.image = stockImg;
+        req.session.save(()=> console.log('saved'))
+    }
 })
 
 router.post('/api/friends', (req, res) => {

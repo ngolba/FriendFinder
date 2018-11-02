@@ -6,162 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>survey</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
-        crossorigin="anonymous">
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Raleway:300i,400');
-    
-        * {
-            font-family: 'Raleway', sans-serif;
-        }
-            
-        .container {
-            margin: auto;
-            height: fit-content;
-            width: 100%;
-            position:absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 20%;
-            max-width: 750px;
-        }
-        #nameFace h1 {
-            text-align: center;
-        }
-        #nameFace {
-            display: none;
-        }
- 
-        #nameFace h3 {
-            width: 5%;
-            display: inherit;
-        }
-        #userName {
-            display: block;
-        }
-        .imgChoices {
-            width: 100%;
-            display: inline-block;
-            text-align: center;
-        }
-        .basicInfo {
-            width: 40%;
-            max-width: 200px;
-            display: inline-block;
-            font-size: 16px;
-            color: black;
-            text-align: center;
-            padding: 5px;
-            margin: 0 auto;
-            border: none;
-            border-bottom: 1px solid black;
-        }
-        input:-webkit-autofill {
-        box-shadow: 0 0 0 30px white inset;
-        -webkit-box-shadow: 0 0 0 30px white inset;
-        }
-        #uploadSubmit, #surveySubmit {
-            display: block;
-            background-color: rgba(10, 10, 10, 0.822);
-            color: white;
-            height: 30px;
-            width: 200px;
-            border: 2px solid rgba(10, 10, 10, 0.822);
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            -webkit-transition-duration: 0.5s;
-            transition-duration: 0.5s;
-            margin: 0 auto;
-        }
-        #uploadSubmit:hover, #surveySubmit:hover {
-            background-color: white;
-            color: rgba(10, 10, 10, 0.822);
-        }
-        #questionGrid {
-            text-align: center;
-            display: none;
-        }
-        progress {
-            width: 50%;
-        }
-        .radioGroup {
-            display: inline-flex;
-            width: fit-content;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            border-radius: 20px;
-            overflow: hidden;
-            margin: 15px auto;
-        }
-        input[type=radio] {
-            visibility: hidden;
-            position: absolute;
-            display:none;
-        }
-        input[type=radio]:checked  + label {
-            color: white;
-            background-color: rgba(10, 10, 10, 0.822);
-        }
-        .radioGroup label {
-            display: inline-block;
-            cursor: pointer;
-            border-right:  1px solid black;
-            font-weight: bold;
-            padding: 5px 20px;
-        }
-        .radioGroup label:last-child {
-            border-right: none;
-        }
-        #results {
-            text-align: center;
-            display:none;
-        }
-        .radioBar p{
-            display: inline;
-        }
-        .surveySubmitContainer {
-            margin-bottom: 15px;
-        }
-        #matchImg {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            padding: 5px;
-        }
-        #userUpload {
-        position: absolute;
-        z-index: -1;
-        opacity: 0;
-        width: .1px;
-        height: .1px;
-        overflow: hidden;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300i,400" rel="stylesheet">
+    <link rel="stylesheet" href="/survey.css">
 </head>
 
 <body>
     <div class="container">
         <form id='nameFace' enctype="multipart/form-data" action="/upload" method="POST" target="uploadFrame">
-            <h1>enter your basic information to begin</h1>
-            <input class="basicInfo" id="userName" type="text" placeholder="your name" name="userInfo" required><br>
-            <div class="imgChoices">
-                <input class="basicInfo" id="userImg" type="url" name="userInfo" placeholder="image url">
-                <h3>or</h3>
-                <input id="userUpload" type="file" name="userInfo" accept="image/*">
-                <label id="userUploadLabel" class="basicInfo" for="userUpload"><span id="fileName">upload</span> <i id="uploadIcon"
-                        class="fas fa-cloud-upload-alt"></i></label>
+            <input style="display:none" id="responses" name='responses' value=''>
+            <div class='surveyFirstForm'>
+                <h1>enter your basic information to begin</h1>
+                <input class="basicInfo" id="userName" type="text" placeholder="your name" name="name" required><br>
+                <div class="imgChoices">
+                    <input class="basicInfo" id="userImg" type="url" name="url" placeholder="image url">
+                    <h3>or</h3>
+                    <input id="userUpload" type="file" name="userFile" accept="image/*">
+                    <label id="userUploadLabel" class="basicInfo" for="userUpload"><span id="fileName">upload</span> <i
+                            id="uploadIcon" class="fas fa-cloud-upload-alt"></i></label>
+                </div>
+                <br>
+                <input type="submit" value="submit" id="uploadSubmit">
             </div>
-            <br>
-            <input type="submit" value="submit" id="uploadSubmit">
-        </form>
-        <iframe id="uploadFrame" name="uploadFrame" style="display: none"></iframe>
-        <div id='questionGrid'>
-            <form>
+            <div id='questionGrid'>
                 <h1 id="question">i get a healthy amount of sleep at night.</h1>
                 <h5>strongly disagree/disagree/neutral/agree/strongly agree</h5>
                 <div class="radioGroup">
@@ -175,66 +41,20 @@
                     <input type="submit" id="surveySubmit" name="0" value="submit">
                 </div>
                 <progress value='0' max='10'></progress>
-            </form>
-        </div>
-        <div id='results'>
-            <h1>your pointless match</h1>
-            <img src="#" id="matchImg">
-            <h2 id="matchName"></h2>
-        </div>
+            </div>
+        </form>
+        <iframe id="uploadFrame" name="uploadFrame" style="display: none"></iframe>
+    </div>
+    <div id='results'>
+        <h1>your pointless match</h1>
+        <img src="#" id="matchImg">
+        <h2 id="matchName"></h2>
+    </div>
     </div>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-<script type="text/javascript">
-    let responses = [];
-    let currentQuestion = 0;
-    let questions = ["i get a healthy amount of sleep at night.", "i look forward to what the future may hold.",
-        "everything is going to turn out alright.", "i look forward to each approaching day.",
-        "sometimes I feel completely alone.", "this is really all there is.", "this is all there will ever be.",
-        "life is a series of futile advances.", "nobody will miss me when i'm gone.",
-        "at least this is all going to be over eventually."
-    ]
-
-    $(document).ready(() => {
-        $('#nameFace').fadeIn(500)
-    })
-
-    $('#nameFace').submit((e) => {
-        $('#nameFace').fadeOut()
-        $('#questionGrid').delay(500).fadeIn()
-    })
-
-    $('#userUpload').change((e) => {
-        $('#fileName').text(($(e.currentTarget).val().split('\\').pop()))
-        $('#uploadIcon').removeClass('fa-cloud-upload-alt').addClass('fa-file-image')
-    })
-
-    $('#surveySubmit').click((e) => {
-        responses.push(Number($("input[type=radio]:checked").attr("points")))
-        currentQuestion++;
-        $('progress').attr('value', currentQuestion)
-        $('input[type=radio]').each(function () {
-            $(this).attr("name", currentQuestion)
-        })
-        if (currentQuestion === 10) {
-            $('#questionGrid').fadeOut();
-            $.post('/api/friends', {
-                responses
-            }).done((match) => {
-                $('#matchImg').attr('src', match.image);
-                $('#matchName').text(match.name);
-                $('#results').fadeIn()
-            })
-        } else {
-            $('#question').fadeOut();
-            setTimeout(() => {
-                $('#question').text(questions[currentQuestion]).fadeIn()
-            }, 400)
-        }
-        e.preventDefault();
-    })
-</script>
+<script type="text/javascript" src="app.js"></script>
 
 </html>

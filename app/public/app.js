@@ -15,17 +15,40 @@ $(document).ready(() => {
 })
 
 $('#nameFace').submit((e) => {
-    if (!surveyDone){
+    if (!surveyDone) {
         $('.surveyFirstForm').fadeOut()
         $('#questionGrid').delay(500).fadeIn()
         e.preventDefault()
+    } else {
+        // $.ajax('/upload',{
+        //     type: "POST"
+        // }).then((data)  => {
+        //         console.log(data)
+        //         $('#matchImg').attr('src', data.url);
+        //     $('#matchName').text(data.name);
+        //     $('#results').fadeIn()
+        //     })
+        // }).then((data) => {
+        //     $('#matchImg').attr('src', data.url);
+        //     $('#matchName').text(data.name);
+        //     $('#results').fadeIn()
+       
+        $.ajax('/upload', {
+            method: "POST"
+        }).then((data) => {
+            $('#matchImg').attr('src', data.url);
+            $('#matchName').text(data.name);
+            $('#results').fadeIn()
+        })
     }
-    // else {
-    //     let jqxhr = $.post('/upload' , () => {})
-    //     jqxhr.done((data) => {
-    //         console.log(data)
-    //     })
-    // }
+        // $.post('/upload', (data) => {
+        //         console.log(data)
+        //         $('#matchImg').attr('src', data.url);
+        //         $('#matchName').text(data.name);
+        //         $('#results').fadeIn()
+        //     })
+        // }
+
 })
 
 $('#userUpload').change((e) => {
@@ -40,10 +63,11 @@ $('#surveySubmit').click((e) => {
     $('input[type=radio]').each(function () {
         $(this).attr("name", currentQuestion)
     })
-    if (currentQuestion === 10) {
+    if (currentQuestion >= 10) {
         $('#questionGrid').fadeOut();
         surveyDone = true;
         $('#responses').attr('value', responses)
+        $('#nameFace').submit()
         // setTimeout(() => $('#nameFace').submit(), 500)
         // $('#nameFace')
         // $.post('/api/friends', {
@@ -60,5 +84,5 @@ $('#surveySubmit').click((e) => {
             $('#question').text(questions[currentQuestion]).fadeIn()
         }, 400)
     }
-    
+
 })

@@ -96,47 +96,44 @@ const setUserImage = (req) => {
     })
 }
 
-router.post('/upload', upload.single('userFile'), (req, res, next) => {
-    // res.set('Content-Type', 'text/html');
-    // res.type('json');
-    // res.type('html');    
-    const initialPost = () => {
-        return new Promise((resolve, reject) => {
-            if (Object.keys(req.body).length < 5)(setTimeout(() => {
-                initialPost();
-                return
-            }, 500))
-            else resolve(req)
-        })
-    }
-    const begin = (req) => {
-        return new Promise((resolve, reject) => {
-            if (req.file) {
-                cloudinary.uploader.upload(req.file.path, (result) => {
-                    req.body.url = result.url;
-                    rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
-                    resolve(req)
-                })
-            } else resolve(req)
-        })
-    }
+// const send = (winner) => {
+//     return new Promise((resolve, reject) => {
+//         res.type('html');
+//         resolve(res.send(winner.body))
+//     })
+// }
 
-    // res.set('Content-Type', 'text/html');
-    // res.send('hello')
-    // res.type('html');
-    const send = (winner) => {
-        return new Promise((resolve, reject) => {
-            res.type('html');
-            resolve(res.send(winner.body))
-        })
-    }
-    initialPost()
+const initialPost = (req) => {
+    return new Promise((resolve, reject) => {
+        if (Object.keys(req.body).length < 5)(setTimeout(() => {
+            return
+        }, 500))
+        else resolve(req)
+    })
+}
+
+
+const begin = (req) => {
+    return new Promise((resolve, reject) => {
+        if (req.file) {
+            cloudinary.uploader.upload(req.file.path, (result) => {
+                req.body.url = result.url;
+                rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
+                resolve(req)
+            })
+        } else resolve(req)
+    })
+}
+
+router.post('/upload', upload.single('userFile'), (req, res, next) => {
+    res.type('.html');   
+    initialPost(req)
         .then(req => begin(req))
         .then(req => setUserImage(req))
         .then(req => addUserData(req))
         .then(res => grabUsers(res.insertId))
         .then(users => sortUsers(users))
-        .then(winner => send(winner))
+        .then(winner => res.send(winner))
 })
 
 router.get('/api/friends', (req, res) => {

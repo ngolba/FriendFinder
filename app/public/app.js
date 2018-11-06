@@ -20,14 +20,14 @@ $('#nameFace').submit((e) => {
         $('#questionGrid').delay(500).fadeIn()
         e.preventDefault()
     } else {
-        setTimeout(() => {
-            let iframe = document.getElementById("uploadFrame");
+        let iframe = document.getElementById("uploadFrame");
+        iframe.onload = () => {
             let elmnt = iframe.contentWindow.document.getElementById("surveyMatchWinner");
             let match = JSON.parse($(elmnt).text());
             $('#matchImg').attr('src', match.url);
             $('#matchName').text(match.name);
             $('#results').fadeIn()
-        }, 500)
+        };
     }
 })
 

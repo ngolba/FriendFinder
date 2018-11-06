@@ -104,7 +104,7 @@ const begin = (req) => {
         if (req.file) {
             cloudinary.uploader.upload(req.file.path, (result) => {
                 req.body.url = result.url;
-                rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
+                // rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
                 resolve(req)
             })
         } else resolve(req)

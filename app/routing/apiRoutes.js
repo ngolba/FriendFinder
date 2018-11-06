@@ -1,15 +1,13 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const path = require('path');
-const bodyParser = require('body-parser')
-const fs = require('fs')
 const rimraf = require('rimraf')
+const bodyParser = require('body-parser')
+router.use(bodyParser.urlencoded({
+    extended: false
+}));
 const cloudinary = require('cloudinary');
-const session = require('express-session');
-const redis = require("redis");
-const RedisStore = require('connect-redis')(session);
-
+const connection = require('../config/connection')
 require('dotenv').config()
 cloudinary.config({
     cloud_name: 'nihilistff',
@@ -21,59 +19,111 @@ const upload = multer({
     dest: 'uploads/'
 });
 const stockImg = 'https://via.placeholder.com/300'
-const friendPath = path.join(__dirname, '../data/friends.js')
-// function User(id, name, image, responses) {id, name, image, responses}
-// let currentUser = {name: '', image: '', responses: []}
-// let friends = []
-// fs.readFile(friendPath, 'utf8', (err, data) => {
-//     friends = JSON.parse(data);
-// })
 
+router.use(bodyParser.json({ type: 'application/*+json' }))
+router.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
+router.use(bodyParser.text({ type: 'text/html' }))
 
-const findMatch = (user, allUsers) => {
-    let nonDuplicateUsers = allUsers.filter(x => (x.name != user.name && x.image != user.image))
-    let matchScores = nonDuplicateUsers
-        .map(u => (u.responses.map((score, question) => score >= user.responses[question] ? score - user.responses[question] : user.responses[question] - score))
-            .reduce((a, b) => a + b))
-    return nonDuplicateUsers[matchScores.indexOf(Math.min(...matchScores))]
+const sortUsers = (users) => {
+    return new Promise((resolve, reject) => {
+        let userMap = new Map(users.res.map(user => [user.id, user]))
+
+        userMap.forEach((value, key, map) => {
+            value.responses = [...value.responses].map(x => x * 1)
+        })
+
+        let currentUser = userMap.get(users.userId)
+        userMap.delete(users.userId)
+        let scores = []
+
+        userMap.forEach((value, key, map) => {
+            value.score = value.responses.map((x, i, a) =>
+                    Math.abs(currentUser.responses[i] - x))
+                .reduce((a, b) => a + b);
+            scores.push(value)
+        })
+        scores.sort((a, b) => (a.score - b.score))
+        resolve(scores[0])
+    })
 }
 
-router.post('/upload', upload.single('userInfo'), (req, res) => {
-    let { userInfo: [username, userUrl] } = req.body;
-    req.session.user = {id: req.session.id, name: username}
-    if (req.file) {
-        cloudinary.uploader.upload(req.file.path, (result) => {
-            req.session.user.image = result.url;
-            console.log('1', req.session)
-            req.session.save(()=> console.log('saved'))
-            rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
+
+const grabUsers = (userId) => {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM users`;
+        connection.query(queryString, (err, res) => {
+            if (err) throw err;
+            resolve({
+                userId,
+                res
+            })
         })
-    } else if (userUrl) {
-        req.session.user.image = userUrl;
-        req.session.save(()=> console.log('saved'))
-    }
-    else {
-        req.session.user.image = stockImg;
-        req.session.save(()=> console.log('saved'))
-    }
-})
+    })
+}
 
-router.post('/api/friends', (req, res) => {
-    req.session.reload(() => console.log('reloaded'))
-    console.log('2', req.session)
-    console.log(req.body)
-    req.session.user.responses = req.body.responses;
-    let match = findMatch(req.session.user, req.app.locals.Users);
-    req.app.locals.Users.push(req.session.user);
-    fs.writeFile(friendPath, JSON.stringify(req.app.locals.Users), 'utf8', err => {
-        if (err) console.log(err)
-    });
-    res.send(match)
-})
+const addUserData = (user) => {
+    return new Promise((resolve, reject) => {
+        let {
+            name,
+            url,
+            responses
+        } = user;
+        let queryString = `INSERT INTO users (name, url, responses) VALUES ('${name}', '${url}', '${responses}');`
+        connection.query(queryString, (err, res) => {
+            if (err) throw err;
+            resolve(res);
+        })
+    })
+}
 
-router.get('/api/friends', (req, res) => {
-    res.send(req.app.locals.Users)
-})
+const setUserImage = (req) => {
+    return new Promise((resolve, reject) => {
+        let user = req.body;
+        if (req.result) {
+            user.url = req.result.url
+            resolve(user)
+        } else if (!user.url.length) {
+            user.url += stockImg;
+            resolve(user)
+        } else resolve(user)
+    })
+}
 
+const initialPost = (req) => {
+    return new Promise((resolve, reject) => {
+        if (Object.keys(req.body).length < 5)(setTimeout(() => {
+            return
+        }, 500))
+        else resolve(req)
+    })
+}
+
+
+const begin = (req) => {
+    return new Promise((resolve, reject) => {
+        if (req.file) {
+            cloudinary.uploader.upload(req.file.path, (result) => {
+                req.body.url = result.url;
+                rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
+                resolve(req)
+            })
+        } else resolve(req)
+    })
+}
+
+router.post('/upload', upload.single('userFile'), (req, res, next) => {
+    res.type('.html');   
+    console.log(req.body, '124')
+    initialPost(req)
+        .then(req => begin(req))
+        .then(req => setUserImage(req))
+        .then(req => addUserData(req))
+        .then(res => grabUsers(res.insertId))
+        .then(users => sortUsers(users))
+        .then(winner => {
+            console.log(winner)
+            res.send(`<p id="surveyMatchWinner">${JSON.stringify(winner)}</p>`)
+        })
+})
 
 module.exports = router;

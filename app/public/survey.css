@@ -1,0 +1,130 @@
+* {
+    font-family: 'Raleway', sans-serif;
+}
+    
+.container, #results {
+    margin: auto;
+    height: fit-content;
+    width: 100%;
+    position:absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 20%;
+    max-width: 750px;
+}
+#nameFace h1 {
+    text-align: center;
+}
+#nameFace {
+    display: none;
+}
+
+#nameFace h3 {
+    width: 5%;
+    display: inherit;
+}
+#userName {
+    display: block;
+}
+.imgChoices {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+.basicInfo {
+    width: 40%;
+    max-width: 200px;
+    display: inline-block;
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    padding: 5px;
+    margin: 0 auto;
+    border: none;
+    border-bottom: 1px solid black;
+}
+input:-webkit-autofill {
+box-shadow: 0 0 0 30px white inset;
+-webkit-box-shadow: 0 0 0 30px white inset;
+}
+#uploadSubmit, #surveySubmit {
+    display: block;
+    background-color: rgba(10, 10, 10, 0.822);
+    color: white;
+    height: 30px;
+    width: 200px;
+    border: 2px solid rgba(10, 10, 10, 0.822);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    margin: 0 auto;
+}
+#uploadSubmit:hover, #surveySubmit:hover {
+    background-color: white;
+    color: rgba(10, 10, 10, 0.822);
+}
+#questionGrid {
+    text-align: center;
+    display: none;
+}
+progress {
+    width: 50%;
+}
+.radioGroup {
+    display: inline-flex;
+    width: fit-content;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px auto;
+}
+input[type=radio] {
+    visibility: hidden;
+    position: absolute;
+    display:none;
+}
+input[type=radio]:checked  + label {
+    color: white;
+    background-color: rgba(10, 10, 10, 0.822);
+}
+.radioGroup label {
+    display: inline-block;
+    cursor: pointer;
+    border-right:  1px solid black;
+    font-weight: bold;
+    padding: 5px 20px;
+}
+.radioGroup label:last-child {
+    border-right: none;
+}
+#results {
+    text-align: center;
+    display:none;
+}
+.radioBar p{
+    display: inline;
+}
+.surveySubmitContainer {
+    margin-bottom: 15px;
+}
+#matchImg {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+#userUpload {
+position: absolute;
+z-index: -1;
+opacity: 0;
+width: .1px;
+height: .1px;
+overflow: hidden;
+}

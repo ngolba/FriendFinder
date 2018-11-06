@@ -27,7 +27,7 @@ $('#nameFace').submit((e) => {
             $('#matchImg').attr('src', match.url);
             $('#matchName').text(match.name);
             $('#results').fadeIn()
-        }, 2000)
+        }, 500)
     }
 })
 

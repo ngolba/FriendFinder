@@ -31,14 +31,11 @@ const sortUsers = (users) => {
         userMap.forEach((value, key, map) => {
             value.responses = [...value.responses].map(x => x * 1)
         })
-
-        let currentUser = userMap.get(users.userId)
-        userMap.delete(users.userId)
         let scores = []
 
         userMap.forEach((value, key, map) => {
             value.score = value.responses.map((x, i, a) =>
-                    Math.abs(currentUser.responses[i] - x))
+                    Math.abs(users.currentUser.responses[i] - x))
                 .reduce((a, b) => a + b);
             scores.push(value)
         })
@@ -48,13 +45,13 @@ const sortUsers = (users) => {
 }
 
 
-const grabUsers = (userId) => {
+const grabUsers = (currentUser) => {
     return new Promise((resolve, reject) => {
         let queryString = `SELECT * FROM users`;
         connection.query(queryString, (err, res) => {
             if (err) throw err;
             resolve({
-                userId,
+                currentUser,
                 res
             })
         })
@@ -89,40 +86,33 @@ const setUserImage = (req) => {
     })
 }
 
-const initialPost = (req) => {
-    return new Promise((resolve, reject) => {
-        if (Object.keys(req.body).length < 5)(setTimeout(() => {
-            return
-        }, 500))
-        else resolve(req)
-    })
-}
-
-
 const begin = (req) => {
     return new Promise((resolve, reject) => {
         if (req.file) {
             cloudinary.uploader.upload(req.file.path, (result) => {
                 req.body.url = result.url;
-                // rimraf(path.join(__dirname, '../../uploads'), () => console.log('upload deleted'))
                 resolve(req)
             })
         } else resolve(req)
     })
 }
 
+const processUser = (req) => {
+    begin(req)
+        .then((req) => setUserImage(req))
+        .then((user) => addUserData(user))
+        .then((res) => console.log('done'))
+}
+
 router.post('/upload', upload.single('userFile'), (req, res, next) => {
-    res.type('.html');   
-    console.log(req.body, '124')
-    initialPost(req)
-        .then(req => begin(req))
-        .then(req => setUserImage(req))
-        .then(req => addUserData(req))
-        .then(res => grabUsers(res.insertId))
-        .then(users => sortUsers(users))
-        .then(winner => {
-            console.log(winner)
+    res.type('.html'); 
+    console.log('post')  
+    let currentUser = {responses: req.body.responses}
+    grabUsers(currentUser)
+        .then((users) => sortUsers(users))
+        .then((winner) => {
             res.send(`<p id="surveyMatchWinner">${JSON.stringify(winner)}</p>`)
+            processUser(req)
         })
 })
 

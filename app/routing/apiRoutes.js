@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require('path');
 const rimraf = require('rimraf')
 const bodyParser = require('body-parser')
-// router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -21,14 +20,8 @@ const upload = multer({
 });
 const stockImg = 'https://via.placeholder.com/300'
 
- 
-// parse various different custom JSON types as JSON
 router.use(bodyParser.json({ type: 'application/*+json' }))
- 
-// parse some custom thing into a Buffer
 router.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
- 
-// parse an HTML body into a string
 router.use(bodyParser.text({ type: 'text/html' }))
 
 const sortUsers = (users) => {
@@ -49,7 +42,7 @@ const sortUsers = (users) => {
                 .reduce((a, b) => a + b);
             scores.push(value)
         })
-        scores.sort((a, b) => a - b)
+        scores.sort((a, b) => (a.score - b.score))
         resolve(scores[0])
     })
 }
@@ -96,13 +89,6 @@ const setUserImage = (req) => {
     })
 }
 
-// const send = (winner) => {
-//     return new Promise((resolve, reject) => {
-//         res.type('html');
-//         resolve(res.send(winner.body))
-//     })
-// }
-
 const initialPost = (req) => {
     return new Promise((resolve, reject) => {
         if (Object.keys(req.body).length < 5)(setTimeout(() => {
@@ -127,18 +113,17 @@ const begin = (req) => {
 
 router.post('/upload', upload.single('userFile'), (req, res, next) => {
     res.type('.html');   
+    console.log(req.body, '124')
     initialPost(req)
         .then(req => begin(req))
         .then(req => setUserImage(req))
         .then(req => addUserData(req))
         .then(res => grabUsers(res.insertId))
         .then(users => sortUsers(users))
-        .then(winner => res.send(winner))
+        .then(winner => {
+            console.log(winner)
+            res.send(`<p id="surveyMatchWinner">${JSON.stringify(winner)}</p>`)
+        })
 })
-
-router.get('/api/friends', (req, res) => {
-    // res.send(req.app.locals.Users)
-})
-
 
 module.exports = router;

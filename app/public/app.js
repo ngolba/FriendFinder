@@ -14,25 +14,20 @@ $(document).ready(() => {
     $('#nameFace').fadeIn(500)
 })
 
-$(document).ajaxComplete(() => {
-    console.log(text())
-})
-
 $('#nameFace').submit((e) => {
     if (!surveyDone) {
         $('.surveyFirstForm').fadeOut()
         $('#questionGrid').delay(500).fadeIn()
         e.preventDefault()
     } else {
-        console.log($('iframe #uploadFrame').contents().find('body'));
-        // console.log($('iframe #uploadFrame').contents().html().find('body').text());
-
-        // $.post('/upload').then((data) => {
-        //     console.log(data)
-        //     $('#matchImg').attr('src', data.url);
-        //     $('#matchName').text(data.name);
-        //     $('#results').fadeIn()
-        // })
+        setTimeout(() => {
+            let iframe = document.getElementById("uploadFrame");
+            let elmnt = iframe.contentWindow.document.getElementById("surveyMatchWinner");
+            let match = JSON.parse($(elmnt).text());
+            $('#matchImg').attr('src', match.url);
+            $('#matchName').text(match.name);
+            $('#results').fadeIn()
+        }, 2000)
     }
 })
 
@@ -49,17 +44,9 @@ $('#surveySubmit').click((e) => {
         $(this).attr("name", currentQuestion)
     })
     if (currentQuestion >= 10) {
-        // $('#questionGrid').fadeOut();
+        $('#questionGrid').fadeOut();
         surveyDone = true;
         $('#responses').attr('value', responses)
-        // $('#nameFace').submit((e) => {
-        //     $.post('/upload').then((data) => {
-        //         console.log(data)
-        //         $('#matchImg').attr('src', data.url);
-        //         $('#matchName').text(data.name);
-        //         $('#results').fadeIn()
-        //     })
-        // })
     } else {
         e.preventDefault();
         $('#question').fadeOut();
